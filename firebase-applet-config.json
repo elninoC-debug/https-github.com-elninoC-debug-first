@@ -1,0 +1,10 @@
+{
+  "projectId": "ht-gcp-it-sandbox",
+  "appId": "1:1013429390723:web:61b0394cfaa5b710f2fab6",
+  "apiKey": "AIzaSyA1ywFRut6wkZJen5M2cd6mR0gUUcuOEiI",
+  "authDomain": "ht-gcp-it-sandbox.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-dfd73e28-5996-4a71-a0cc-de6b8a94febd",
+  "storageBucket": "ht-gcp-it-sandbox.firebasestorage.app",
+  "messagingSenderId": "1013429390723",
+  "measurementId": ""
+}

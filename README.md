@@ -1,11 +1,36 @@
-<div align="center">
+# NutriStats (Macrometric)
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A professional nutrition and weight tracking dashboard with secure Firebase authentication and real-time data persistence.
 
-  <h1>Built with AI Studio</h2>
+## Features
+- **Secure Authentication**: Google Login via Firebase.
+- **Nutrition Tracking**: Log proteins, calories, fats, and carbs.
+- **Weight Monitoring**: Track weight progress with visual charts.
+- **Responsive Design**: Sleek "Macrometric" dark theme.
+- **Data Persistence**: Powered by Firestore Enterprise.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Local Setup
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-</div>
+### 2. Configure Environment
+Create a `.env` file in the root based on `.env.example`:
+```env
+GEMINI_API_KEY="YOUR_API_KEY"
+```
+
+### 3. Run Development Server
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:3000`.
+
+## Tech Stack
+- **Frontend**: React 19, Vite, Tailwind CSS 4.
+- **Backend/Database**: Firebase (Auth & Firestore).
+- **Animations**: Motion (formerly Framer Motion).
+- **Charts**: Recharts.
+- **Icons**: Lucide React.

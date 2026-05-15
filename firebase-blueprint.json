@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "user": {
+      "title": "User Profile",
+      "description": "Public profile information for a user.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["createdAt"]
+    },
+    "userPrivate": {
+      "title": "Private User Data",
+      "description": "Sensitive user information restricted to the owner.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      },
+      "required": ["email"]
+    },
+    "log": {
+      "title": "Nutrition and Weight Log",
+      "description": "Daily entry for nutrition and weight metrics.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "proteins": { "type": "number", "description": "Grams of protein" },
+        "calories": { "type": "number", "description": "Total calories" },
+        "fats": { "type": "number", "description": "Grams of fat" },
+        "carbs": { "type": "number", "description": "Grams of carbohydrates" },
+        "weight": { "type": "number", "description": "Weight in kg/lbs" },
+        "notes": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["date", "userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "Public user profiles."
+    },
+    "/users/{userId}/private/info": {
+      "schema": "userPrivate",
+      "description": "Private user information."
+    },
+    "/logs/{logId}": {
+      "schema": "log",
+      "description": "Nutrition and weight logs indexed by ID, filtered by userId."
+    }
+  }
+}

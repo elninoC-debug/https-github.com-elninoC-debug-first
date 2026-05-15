@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entity Validations ---
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['createdAt']) &&
+             data.keys().size() <= 4 &&
+             data.createdAt is timestamp &&
+             (data.get('displayName', '') is string && data.get('displayName', '').size() <= 100) &&
+             (data.get('photoURL', '') is string && data.get('photoURL', '').size() <= 500);
+    }
+
+    function isValidUserPrivate(data) {
+      return data.keys().hasAll(['email']) &&
+             data.keys().size() == 1 &&
+             data.email is string && data.email.size() <= 200;
+    }
+
+    function isValidLog(data) {
+      return data.keys().hasAll(['date', 'userId']) &&
+             data.userId == request.auth.uid &&
+             data.date is timestamp &&
+             (data.get('proteins', 0) is number) &&
+             (data.get('calories', 0) is number) &&
+             (data.get('fats', 0) is number) &&
+             (data.get('carbs', 0) is number) &&
+             (data.get('weight', 0) is number) &&
+             (data.get('notes', '') is string && data.get('notes', '').size() <= 1000);
+    }
+
+    // --- Match Blocks ---
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn(); // Public profiles can be listed
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) && 
+                    incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL']);
+    }
+
+    match /users/{userId}/private/info {
+      allow get, write: if isOwner(userId) && isValidUserPrivate(incoming());
+    }
+
+    match /logs/{logId} {
+      allow get: if isSignedIn() && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidLog(incoming()) && isValidId(logId);
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && 
+                    isValidLog(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasAll(['date', 'userId']) == false && // Immutable fields
+                    incoming().userId == existing().userId;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+  }
+}

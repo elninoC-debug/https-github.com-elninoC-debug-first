@@ -1,0 +1,6 @@
+{
+  "name": "NutriStats",
+  "description": "A comprehensive nutrition and weight tracking dashboard with secure authentication.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
